@@ -1,5 +1,4 @@
-remote_theme: pages-themes/midnight@v0.2.0
-plugins: jekyll-remote-theme
+theme: jekyll-theme-minimal
 title: SojourningGhost
 tagline: portfolio
 description: Japanese projects and English editing
