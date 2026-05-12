@@ -1,0 +1,3 @@
+This folder contains samples of my editing.
+
+The folders with game reviews each contain a file with the published version of the review and the editing process as well as a separate file containing raw BBcode of the review at various stages of completion. All three, but particularly the Ultimate Zombie Defense 2 and VLADiK Brutal reviews, required substantial editing. My job was to catch all grammatical and mechanical errors and to ensure the review met our standards for coverage. I did my best to leave everything else in the hands of the author; hence, slang, references, and the occasional bit of profanity went generally untouched, and the tone leans conversational.
