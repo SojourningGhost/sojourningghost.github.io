@@ -1,0 +1,18 @@
+---
+const { frontmatter } = Astro.props;
+const title = frontmatter?.title ?? 'SojourningGhost';
+---
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <main>
+      <slot />
+    </main>
+    <footer><a href="/">← 目次</a></footer>
+  </body>
+</html>
