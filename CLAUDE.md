@@ -58,7 +58,7 @@ The auto-listing in `Section.astro` and `Home.astro` uses `import.meta.glob` and
 
 - **Do not `Read` the file whole** — it exceeds the tool's token budget. Use Grep on it or read by byte offset.
 - The `.canvas` JSON next to it is the editable source in Obsidian; the `.html` is a re-export.
-- A `prebuild` step (`scripts/clean-obsidian-export.mjs`) runs automatically before every build and re-runs idempotently. It strips a Liquid `<base>` tag left over from the Jekyll era, a `<link itemprop="include" href="site-lib/...">` that 404s on Pages, and a `.graph-view-wrapper` element whose mount triggers a wasm fetch. It then injects a fixed-position 「← 目次」 return link tagged with `data-sg-return-link` (used as the idempotency marker).
+- A `prebuild` step (`scripts/clean-obsidian-export.mjs`) runs automatically before every build and re-runs idempotently. It strips a Liquid `<base>` tag left over from the Jekyll era, a `<link itemprop="include" href="site-lib/...">` that 404s on Pages, and a `.graph-view-wrapper` element whose mount triggers a wasm fetch. It rewrites every `"file:" === location.protocol` check (and the `!==` variant) in the inline JS so the chart always takes its self-contained inline-data branch — without that rewrite, http-served versions fetch `site-lib/metadata.json` + `graph-wasm.wasm` (neither ships with the export), and pan/zoom never wires up. Finally it injects a fixed-position 「← 目次」 return link tagged with `data-sg-return-link` (used as the idempotency marker).
 - Re-exporting the chart from Obsidian: overwrite the `.html` and re-build. The cleanup runs automatically.
 - Pre-existing "Failed to find all required elements for canvas node" console noise in the chart is harmless and shows up locally too.
 
