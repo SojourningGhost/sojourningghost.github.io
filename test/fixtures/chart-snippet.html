@@ -9,4 +9,10 @@
   <div id="graph-canvas"></div>
 </div>
 <div id="main">main content</div>
+<script>
+if ("file:"===window.location.protocol) { useInlineData(); }
+this.isHttp = "file:"!=window.location.protocol;
+if ("file:"==location.protocol) { localBranch(); } else { httpBranch(); }
+if ("file:"!==window.location.protocol) await loadIncludes();
+</script>
 </body></html>

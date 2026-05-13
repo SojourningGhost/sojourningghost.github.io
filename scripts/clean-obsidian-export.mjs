@@ -15,6 +15,13 @@ export function clean(html) {
     ''
   );
 
+  // The obsidian export's inline JS branches on location.protocol === "file:" to
+  // choose between an inline-data path (self-contained, no network) and an http
+  // path that fetches site-lib/* files we don't have. Force every check to the
+  // inline-data branch so the chart works under any origin.
+  out = out.replace(/"file:"\s*===?\s*(?:window\.)?location\.protocol/g, 'true');
+  out = out.replace(/"file:"\s*!==?\s*(?:window\.)?location\.protocol/g, 'false');
+
   if (!out.includes('data-sg-return-link')) {
     out = out.replace(/(<body\b[^>]*>)/i, `$1\n${RETURN_LINK}`);
   }
