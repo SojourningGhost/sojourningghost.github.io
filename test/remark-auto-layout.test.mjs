@@ -30,3 +30,9 @@ test('does not overwrite an explicit layout in frontmatter', () => {
   remarkAutoLayout()(null, file);
   assert.equal(file.data.astro.frontmatter.layout, '/src/layouts/Custom.astro');
 });
+
+test('normalizes Windows backslashes in the file path', () => {
+  const file = fakeFile('C:\\repo\\src\\pages\\index.md');
+  remarkAutoLayout()(null, file);
+  assert.equal(file.data.astro.frontmatter.layout, '/src/layouts/Home.astro');
+});

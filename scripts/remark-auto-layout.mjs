@@ -11,6 +11,7 @@ export function remarkAutoLayout() {
     if (rel === 'index.md') {
       fm.layout = '/src/layouts/Home.astro';
     } else if (/^[^/]+\/index\.md$/.test(rel)) {
+      // depth-1 only: matches "<section>/index.md", not "<section>/<sub>/index.md".
       fm.layout = '/src/layouts/Section.astro';
     } else {
       fm.layout = '/src/layouts/Default.astro';
