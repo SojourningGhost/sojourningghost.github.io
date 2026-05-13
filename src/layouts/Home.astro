@@ -1,31 +1,47 @@
 ---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageList from '../components/PageList.astro';
+
 const { frontmatter } = Astro.props;
 const title = frontmatter?.title ?? 'SojourningGhost';
+const description = frontmatter?.description
+  ?? 'Translations, essays, mods, editing samples, and language notes by SojourningGhost.';
 
+// Auto-list top-level sections. Any new <section>/index.md appears here.
 const indexes = import.meta.glob('/src/pages/*/index.md', { eager: true });
 const sections = Object.entries(indexes)
   .map(([path, mod]) => {
-    const dir = path.match(/^\/src\/pages\/([^/]+)\/index\.md$/)[1];
+    const dir = path.match(/^\/src\/pages\/([^/]+)\/index\.md$/)![1];
     return {
       href: '/' + dir + '/',
-      title: (mod && mod.frontmatter && mod.frontmatter.title) || dir,
+      title: ((mod as any)?.frontmatter?.title) || dir,
     };
   })
   .sort((a, b) => a.title.localeCompare(b.title, 'ja'));
+
+const currentPath = Astro.url.pathname;
 ---
 <!doctype html>
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f5f1e8" />
     <title>{title}</title>
   </head>
   <body>
-    <main>
-      <slot />
-      <ul>
-        {sections.map((s) => <li><a href={s.href}>{s.title}</a></li>)}
-      </ul>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header currentPath={currentPath} />
+    <main id="main" class="page page--wide">
+      <div class="home-prose">
+        <slot />
+      </div>
+      <PageList items={sections} variant="sections" label="Sections" />
     </main>
+    <Footer showReturn={false} />
   </body>
 </html>

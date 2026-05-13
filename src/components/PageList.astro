@@ -1,0 +1,30 @@
+---
+// Renders an auto-generated list of pages. The actual globbing happens
+// in the consuming layout (Section/Home) because import.meta.glob
+// patterns are static at the call site and we don't want to duplicate
+// the discovery logic.
+//
+// Pass in a pre-built array of { href, title } items, plus a variant.
+type Item = { href: string; title: string };
+const {
+  items,
+  variant = 'siblings',
+  label,
+} = Astro.props as {
+  items: Item[];
+  variant?: 'siblings' | 'sections';
+  label?: string;
+};
+
+const classes = ['page-list'];
+if (variant === 'sections') classes.push('page-list--sections');
+---
+{items.length > 0 && (
+  <ul class={classes.join(' ')} aria-label={label}>
+    {items.map((s) => (
+      <li class="page-list__item">
+        <a class="page-list__link" href={s.href}>{s.title}</a>
+      </li>
+    ))}
+  </ul>
+)}

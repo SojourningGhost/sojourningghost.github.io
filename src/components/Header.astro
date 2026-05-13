@@ -1,0 +1,46 @@
+---
+// Site header with section navigation.
+// Highlights the current section via the request URL — pure CSS / SSR,
+// no JS. `currentPath` is derived from Astro.url.pathname.
+const { currentPath } = Astro.props as { currentPath?: string };
+
+// Eagerly glob the section index pages so the nav matches whatever
+// sections exist on disk. Any new <section>/index.md folder appears
+// automatically.
+const indexes = import.meta.glob('/src/pages/*/index.md', { eager: true });
+const sections = Object.entries(indexes)
+  .map(([path, mod]) => {
+    const dir = path.match(/^\/src\/pages\/([^/]+)\/index\.md$/)![1];
+    return {
+      href: '/' + dir + '/',
+      title: ((mod as any)?.frontmatter?.title) || dir,
+      dir,
+    };
+  })
+  .sort((a, b) => a.title.localeCompare(b.title, 'ja'));
+
+function isCurrent(href: string): boolean {
+  if (!currentPath) return false;
+  if (href === '/') return currentPath === '/';
+  return currentPath === href || currentPath.startsWith(href);
+}
+---
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="site-header__mark" href="/" aria-label="SojourningGhost — home">
+      Sojourning&nbsp;Ghost
+    </a>
+    <nav aria-label="Sections">
+      <ul class="site-nav">
+        {sections.map((s) => (
+          <li>
+            <a
+              href={s.href}
+              aria-current={isCurrent(s.href) ? 'page' : undefined}
+            >{s.title}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>

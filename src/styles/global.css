@@ -1,0 +1,469 @@
+/* ============================================================
+   SojourningGhost — global stylesheet
+   Bookish typographic minimalism: cream paper, ink-black text,
+   Japanese 明朝 serif paired with a Western serif. No web fonts.
+   ============================================================ */
+
+/* ---------- tokens ---------- */
+:root {
+  /* Color — verified WCAG AA against --paper:
+       --ink (#1a1814) on --paper (#f5f1e8) → 14.5 : 1
+       --ink-muted (#57514a) on --paper       →  6.4 : 1
+       --accent (#6b3410) on --paper          →  7.6 : 1 */
+  --paper: #f5f1e8;
+  --paper-shade: #ece6d7;
+  --paper-deep: #e3dccb;
+  --ink: #1a1814;
+  --ink-muted: #57514a;
+  --rule: #d8d0c0;
+  --accent: #6b3410;
+  --selection-bg: #2a2520;
+  --selection-fg: #f5f1e8;
+
+  /* Type stacks — system only, zero web-font loads. */
+  --serif-ja: "Hiragino Mincho ProN", "Yu Mincho", YuMincho,
+              "Noto Serif JP", serif;
+  --serif-en: "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
+              Palatino, "Source Serif 4", "Source Serif Pro",
+              Georgia, serif;
+  --mono: "SF Mono", "JetBrains Mono", Menlo, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+
+  /* Scale: deliberately conservative for long-form reading.
+     1rem == 17px (set on <html>). */
+  --fs-base: 1rem;        /* 17px body */
+  --fs-sm:   0.875rem;    /* ~15px footer/nav */
+  --fs-xs:   0.8125rem;
+  --fs-h3:   1.125rem;    /* ~19px */
+  --fs-h2:   1.375rem;    /* ~23px */
+  --fs-h1:   1.875rem;    /* ~32px */
+  --fs-display: 2.5rem;   /* section landing 明朝 H1 */
+
+  --lh-body: 1.7;
+  --lh-tight: 1.3;
+
+  /* Spacing scale (baseline ~8px / 0.5rem). */
+  --space-1: 0.5rem;
+  --space-2: 0.75rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2rem;
+  --space-6: 3rem;
+  --space-7: 4.5rem;
+  --space-8: 6rem;
+
+  /* Layout. */
+  --measure-prose: 38em;   /* ~640px — bookish reading column */
+  --measure-wide:  44em;   /* ~740px — for landing/section lists */
+}
+
+/* ---------- reset (minimal, intentional) ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  font-size: 17px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Avoid font swapping flash for the rare case a JA font is loading. */
+  font-synthesis: none;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif-en);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  /* Pair Western serif with Japanese 明朝: the font-family above wins
+     for Latin glyphs, then the browser falls through to JA fallbacks
+     for CJK glyphs. We expose `--serif-ja` for places where the
+     Japanese face should lead (display headings). */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "kern", "liga", "onum";
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+::selection {
+  background: var(--selection-bg);
+  color: var(--selection-fg);
+}
+
+/* ---------- skip-link ---------- */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100vh;
+  z-index: 100;
+  padding: 0.5rem 0.875rem;
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+  font-family: var(--serif-en);
+  font-size: var(--fs-sm);
+  border-radius: 2px;
+}
+.skip-link:focus-visible,
+.skip-link:focus {
+  top: 0.75rem;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- focus rings ---------- */
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+/* ---------- header / nav ---------- */
+.site-header {
+  border-bottom: 1px solid var(--rule);
+  padding: var(--space-4) var(--space-4) var(--space-3);
+}
+.site-header__inner {
+  max-width: var(--measure-wide);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3) var(--space-5);
+}
+.site-header__mark {
+  font-family: var(--serif-en);
+  font-size: var(--fs-base);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 400;
+  /* The site mark is small caps in spirit, not in glyph. */
+}
+.site-header__mark:hover,
+.site-header__mark:focus-visible { color: var(--accent); }
+
+.site-nav {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-4);
+  font-family: var(--serif-ja);
+  font-size: var(--fs-sm);
+  list-style: none;
+  padding: 0;
+}
+.site-nav a {
+  color: var(--ink-muted);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 1px;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  color: var(--ink);
+  border-bottom-color: var(--rule);
+}
+.site-nav a[aria-current="page"],
+.site-nav a[aria-current="true"] {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+/* ---------- layout ---------- */
+.page {
+  flex: 1 0 auto;
+  width: 100%;
+  max-width: var(--measure-prose);
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-4) var(--space-6);
+}
+.page--wide {
+  max-width: var(--measure-wide);
+}
+
+/* ---------- prose: headings ---------- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--serif-en);
+  color: var(--ink);
+  line-height: var(--lh-tight);
+  font-weight: 600;
+  margin: var(--space-6) 0 var(--space-3);
+  letter-spacing: -0.005em;
+}
+h1:first-child, h2:first-child, h3:first-child { margin-top: 0; }
+
+h1 {
+  font-size: var(--fs-h1);
+  font-weight: 500;
+  margin-top: 0;
+  margin-bottom: var(--space-5);
+}
+h2 {
+  font-size: var(--fs-h2);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: var(--space-1);
+}
+h3 { font-size: var(--fs-h3); }
+h4, h5, h6 {
+  font-size: var(--fs-base);
+  font-weight: 600;
+  font-style: italic;
+}
+
+/* Section landing pages — the marquee typography moment. */
+.section-title {
+  font-family: var(--serif-ja);
+  font-size: var(--fs-display);
+  font-weight: 500;
+  line-height: 1.15;
+  margin: 0 0 var(--space-5);
+  letter-spacing: 0.05em;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Home landing — silent; the section list speaks. */
+
+/* ---------- prose: paragraphs, inline ---------- */
+p {
+  margin: 0 0 var(--space-4);
+  /* Hanging punctuation where browsers support it. */
+  hanging-punctuation: first last;
+}
+
+p + p { margin-top: calc(var(--space-4) * -0.25); }
+
+a {
+  color: var(--ink);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 0.18em;
+  transition: text-decoration-color 120ms ease, color 120ms ease;
+}
+a:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+a:focus-visible {
+  color: var(--accent);
+}
+
+strong, b { font-weight: 600; }
+em, i { font-style: italic; }
+small { font-size: var(--fs-sm); color: var(--ink-muted); }
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: var(--space-6) 0;
+}
+
+/* ---------- prose: lists ---------- */
+ul, ol {
+  margin: 0 0 var(--space-4);
+  padding-left: 1.5em;
+}
+li { margin-bottom: var(--space-1); }
+li > ul, li > ol { margin-top: var(--space-1); margin-bottom: var(--space-1); }
+
+/* ---------- prose: quotes ---------- */
+blockquote {
+  margin: var(--space-4) 0;
+  padding: var(--space-1) var(--space-4);
+  border-left: 2px solid var(--paper-deep);
+  color: var(--ink-muted);
+  font-style: italic;
+}
+blockquote p:last-child { margin-bottom: 0; }
+
+/* ---------- prose: code ---------- */
+code, kbd, samp, pre {
+  font-family: var(--mono);
+  font-size: 0.92em;
+}
+:not(pre) > code {
+  background: var(--paper-shade);
+  padding: 0.1em 0.35em;
+  border-radius: 2px;
+}
+pre {
+  background: var(--paper-shade);
+  color: var(--ink);
+  padding: var(--space-3) var(--space-4);
+  border-radius: 3px;
+  overflow-x: auto;
+  margin: 0 0 var(--space-4);
+  line-height: 1.55;
+  font-size: var(--fs-sm);
+  border: 1px solid var(--paper-deep);
+}
+pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* ---------- prose: tables (Close to you uses one) ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 var(--space-5);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--rule);
+  white-space: pre-wrap;
+}
+th {
+  font-family: var(--serif-en);
+  font-weight: 600;
+  border-bottom: 2px solid var(--ink);
+  font-size: var(--fs-sm);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- prose: images / media ---------- */
+img, svg, video {
+  max-width: 100%;
+  height: auto;
+}
+figure { margin: var(--space-5) 0; }
+figcaption {
+  font-size: var(--fs-sm);
+  color: var(--ink-muted);
+  font-style: italic;
+  margin-top: var(--space-1);
+  text-align: center;
+}
+
+/* ---------- the auto-generated page list ---------- */
+.page-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-5) 0 0;
+  border-top: 1px solid var(--rule);
+}
+.page-list__item {
+  margin: 0;
+  border-bottom: 1px solid var(--rule);
+}
+.page-list__link {
+  display: block;
+  padding: var(--space-3) 0;
+  font-family: var(--serif-ja);
+  font-size: 1.0625rem;
+  color: var(--ink);
+  text-decoration: none;
+  border: none;
+  transition: color 120ms ease, padding-left 160ms ease;
+}
+.page-list__link:hover,
+.page-list__link:focus-visible {
+  color: var(--accent);
+  padding-left: var(--space-2);
+}
+
+/* Home variant — sections — slightly larger, more breath. */
+.page-list--sections .page-list__link {
+  padding: var(--space-4) 0;
+  font-size: 1.375rem;
+  letter-spacing: 0.04em;
+}
+
+/* When a section's index page has prose, we want some breath
+   between the prose and the sibling list. */
+.section-prose + .page-list,
+.home-prose + .page-list { margin-top: var(--space-6); }
+
+/* ---------- footer ---------- */
+.site-footer {
+  flex-shrink: 0;
+  margin-top: var(--space-7);
+  border-top: 1px solid var(--rule);
+  padding: var(--space-4) var(--space-4) var(--space-5);
+  font-size: var(--fs-sm);
+  color: var(--ink-muted);
+}
+.site-footer__inner {
+  max-width: var(--measure-wide);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.site-footer a {
+  color: var(--ink-muted);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.site-footer a:hover,
+.site-footer a:focus-visible {
+  color: var(--ink);
+  border-bottom-color: var(--ink-muted);
+}
+.site-footer__meta {
+  font-family: var(--serif-en);
+  font-style: italic;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 640px) {
+  :root {
+    --fs-display: 2rem;
+    --fs-h1: 1.625rem;
+  }
+  .page { padding: var(--space-5) var(--space-3) var(--space-5); }
+  .site-header { padding: var(--space-3); }
+  .site-header__inner { gap: var(--space-2) var(--space-3); }
+  .site-nav { margin-left: 0; gap: var(--space-2) var(--space-3); }
+  .page-list--sections .page-list__link { font-size: 1.1875rem; }
+  /* Horizontal scroll for the bilingual table on narrow viewports. */
+  table { display: block; overflow-x: auto; }
+}
+
+@media (max-width: 360px) {
+  html { font-size: 16px; }
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+  }
+}
+
+/* ---------- print ---------- */
+@media print {
+  :root {
+    --paper: #ffffff;
+    --paper-shade: #f4f4f4;
+    --paper-deep: #e6e6e6;
+    --ink: #000000;
+    --ink-muted: #333333;
+    --rule: #cccccc;
+  }
+  body { font-size: 11pt; line-height: 1.5; }
+  .site-header,
+  .site-footer,
+  .skip-link { display: none; }
+  .page { max-width: none; padding: 0; }
+  a { color: var(--ink); text-decoration: underline; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.85em; color: #555; }
+  h1, h2, h3 { page-break-after: avoid; }
+  pre, blockquote, table { page-break-inside: avoid; }
+}

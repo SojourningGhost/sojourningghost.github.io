@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
-const RETURN_LINK = `<a href="/" data-sg-return-link style="position:fixed;top:14px;left:14px;z-index:9999;padding:8px 14px;background:rgba(20,20,20,0.78);color:#f5f1ea;text-decoration:none;font:14px/1 system-ui,-apple-system,'Hiragino Mincho ProN','Yu Mincho',serif;border-radius:2px;backdrop-filter:blur(6px);">← 目次</a>`;
+const RETURN_LINK = `<a href="/" data-sg-return-link style="position:fixed;top:16px;left:16px;z-index:9999;padding:8px 14px;background:#f5f1e8;color:#1a1814;text-decoration:none;font:15px/1.2 'Iowan Old Style','Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;border:1px solid #d8d0c0;border-radius:2px;box-shadow:0 1px 3px rgba(26,24,20,0.08);">← 目次</a>`;
 
 export function clean(html) {
   let out = html;
