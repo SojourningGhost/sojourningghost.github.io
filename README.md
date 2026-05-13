@@ -1,7 +1,15 @@
 # sojourningghost.github.io
 
-Source for the portfolio site at https://sojourningghost.github.io/ — Japanese↔English translations, essays on the Japanese language, English editing samples, and a Final Fantasy XI mod.
+Source for the portfolio at <https://sojourningghost.github.io/> — Japanese↔English translations, essays on Japanese language, English editing samples, a Final Fantasy XI mod, language notes, and an interactive chart of the Japanese imperial household titles.
 
-The live site is served by GitHub Pages from the `docs/` folder on `main`. Pushes to `main` trigger a rebuild; there is no separate CI. Site configuration is in `docs/_config.yml` (Jekyll, `jekyll-theme-minimal`); the landing page is `docs/readme.md`.
+Built with [Astro](https://astro.build/). Deployed to GitHub Pages via GitHub Actions on every push to `main`.
 
-See `CLAUDE.md` for an architecture overview and notes on the Jekyll/Liquid quirks that have come up while working on the site.
+## For visitors
+
+Browse the site directly at <https://sojourningghost.github.io/>.
+
+## For me (and AI assistants)
+
+- `WORKFLOW.md` — how to write content, preview locally, publish, and troubleshoot.
+- `CLAUDE.md` — architecture and conventions for AI agents working on this repo.
+- `plans/2026-05-12-site-revamp-design.md` — design rationale for the current architecture.
