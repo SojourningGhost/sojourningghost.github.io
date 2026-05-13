@@ -3,12 +3,13 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { remarkAutoLayout } from './scripts/remark-auto-layout.mjs';
+import { remarkWikilinkStrip } from './scripts/remark-wikilink-strip.mjs';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://sojourningghost.github.io',
   integrations: [mdx(), sitemap()],
   markdown: {
-    remarkPlugins: [remarkAutoLayout],
+    remarkPlugins: [remarkAutoLayout, remarkWikilinkStrip],
   },
 });
