@@ -1,0 +1,43 @@
+---
+const { frontmatter, url } = Astro.props;
+const title = frontmatter?.title ?? 'SojourningGhost';
+
+// url looks like "/拙訳/" — strip slashes to get the section directory name.
+const sectionDir = url.replace(/^\/|\/$/g, '');
+
+// Eagerly glob every markdown page so we can filter by section.
+const allPages = import.meta.glob('/src/pages/**/*.md', { eager: true });
+const siblings = Object.entries(allPages)
+  .filter(([path]) => {
+    const m = path.match(/^\/src\/pages\/([^/]+)\/([^/]+)\.md$/);
+    return m && m[1] === sectionDir && m[2] !== 'index';
+  })
+  .map(([path, mod]) => {
+    const slug = path.match(/\/([^/]+)\.md$/)[1];
+    return {
+      href: '/' + sectionDir + '/' + slug + '/',
+      title: (mod && mod.frontmatter && mod.frontmatter.title) || slug,
+    };
+  })
+  .sort((a, b) => a.title.localeCompare(b.title, 'ja'));
+---
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <main>
+      <h1>{title}</h1>
+      <slot />
+      {siblings.length > 0 && (
+        <ul>
+          {siblings.map((s) => <li><a href={s.href}>{s.title}</a></li>)}
+        </ul>
+      )}
+    </main>
+    <footer><a href="/">← 目次</a></footer>
+  </body>
+</html>
