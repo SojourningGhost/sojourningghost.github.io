@@ -48,3 +48,9 @@ test('is idempotent (running on cleaned output makes no further change)', () => 
   const twice = clean(once);
   assert.equal(twice, once);
 });
+
+test('clean() with explicit returnHref injects a return link pointing to that href', () => {
+  const out = clean(fixture, '/図/');
+  assert.match(out, /data-sg-return-link/);
+  assert.match(out, /href="\/図\/"/);
+});
