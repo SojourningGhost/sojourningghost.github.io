@@ -150,8 +150,8 @@ To manually trigger a deploy without a commit: the workflow accepts `workflow_di
 - Confirm the deploy workflow succeeded. If the build passed but the page is still 404, hard-refresh the browser; GitHub Pages occasionally serves a cached copy.
 
 **The chart shows console errors about `wasm` or `site-lib`, or pan/zoom doesn't work.**
-- The chart's cleanup needs re-running. `npm run prebuild` against the current file; commit the result. The protocol-check rewrite is what keeps the inline-data branch alive — without it the chart tries to fetch files that aren't there and aborts before wiring up pan/zoom.
-- If the 404s persist, the source HTML has a new pattern the cleanup script doesn't strip. Inspect `public/図/皇室称号図/皇室称号図.html` for the offending tag or comparison and extend `scripts/clean-obsidian-export.mjs` (with a matching test fixture case).
+- The chart's cleanup needs re-running. `npm run dev` or `npm run build` does it automatically (the script glob-scans every `*.html` under `public/`); commit any resulting changes to the `.html`. The protocol-check rewrite is what keeps the inline-data branch alive — without it the chart tries to fetch files that aren't there and aborts before wiring up pan/zoom.
+- If the 404s persist, the source HTML has a new pattern the cleanup script doesn't strip. Inspect the offending chart's `.html` file under `public/` for the new tag or comparison and extend `scripts/clean-obsidian-export.mjs` (with a matching test fixture case).
 
 Pre-existing "Failed to find all required elements for canvas node" console noise is harmless and shows up locally too — that's the chart's own diagnostic about its layout pass, not an actual failure.
 
