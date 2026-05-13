@@ -36,15 +36,15 @@ export function clean(html, returnHref = '/') {
 // Derive the return href from a file path under public/.
 // public/<section>/.../<file>.html  →  /<section>/
 // public/<file>.html                →  /
+// anywhere outside public/          →  /
 function hrefFromPath(filePath) {
-  // Normalise separators to forward slash then strip leading public/
-  const normalised = filePath.replace(/\\/g, '/').replace(/^.*?public\//, '');
-  const segments = normalised.split('/');
-  // segments[0] is either a top-level section folder or the html filename itself
-  if (segments.length >= 2) {
-    return `/${segments[0]}/`;
-  }
-  return '/';
+  const normalised = filePath.replace(/\\/g, '/');
+  const m = normalised.match(/(?:^|\/)public\/(.+)$/);
+  if (!m) return '/';
+  const rel = m[1];
+  const slash = rel.indexOf('/');
+  if (slash === -1) return '/';
+  return `/${rel.slice(0, slash)}/`;
 }
 
 // Recursively collect every *.html file under dir.
