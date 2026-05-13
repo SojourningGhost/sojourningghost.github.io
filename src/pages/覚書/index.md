@@ -2,4 +2,4 @@
 title: 覚書
 ---
 
-このフォルダ内のマークダウンファイルは、いずれも日本語の働きに関する個人的な覚書である。元来公表を予定したものではなく、自分の備忘のために書き留めたものであるが、できる限り明晰かつ簡潔な説明を心がけ、出典も添えるよう努めた。
+The markdown files contained in this folder are all personal notes concerning the workings of Japanese. I had never expected to publish any of them as they were composed for my own use and memory; nevertheless, in general, I have tried to write lucid, concise explanations and include sources.
