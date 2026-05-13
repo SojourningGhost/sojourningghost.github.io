@@ -7,6 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/clean-obsidian-export.mjs public/図/皇室称号図/皇室称号図.html",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
