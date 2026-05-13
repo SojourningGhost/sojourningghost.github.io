@@ -79,7 +79,12 @@ The imperial-titles chart at `public/図/皇室称号図/皇室称号図.html` i
 2. Edit visually.
 3. Use Obsidian's Webpage HTML Export to re-export.
 4. **Overwrite** the existing `皇室称号図.html` at the same path.
-5. Run `npm run build` locally to confirm the cleanup script handled the new export (the prebuild step strips the broken `<base>` tag, the `site-lib` link, and any `.graph-view-wrapper` element; it also injects the 「← 目次」 return link).
+5. Run `npm run build` locally to confirm the cleanup script handled the new export. The prebuild step:
+   - strips the broken Liquid `<base>` tag
+   - strips the `site-lib` `<link>` include
+   - strips any `.graph-view-wrapper` element
+   - rewrites every `"file:" === location.protocol` (and variants) so the chart always takes its inline-data branch — without this the chart tries to fetch `site-lib/metadata.json` and `graph-wasm.wasm`, which aren't part of the export and 404 on any http origin
+   - injects the fixed-position 「← 目次」 return link
 6. Commit and push the updated `.html`.
 
 If the cleanup script ever doesn't catch a new pattern, edit `scripts/clean-obsidian-export.mjs` and update its test (`test/clean-obsidian-export.test.mjs` + `test/fixtures/chart-snippet.html`). `node --test test/clean-obsidian-export.test.mjs` runs the suite.
@@ -120,9 +125,11 @@ To manually trigger a deploy without a commit: the workflow accepts `workflow_di
 - Confirm the `.md` file is committed: `git log -- src/pages/<path>`.
 - Confirm the deploy workflow succeeded. If the build passed but the page is still 404, hard-refresh the browser; GitHub Pages occasionally serves a cached copy.
 
-**The chart shows console errors about `wasm` or `site-lib`.**
-- The chart's cleanup needs re-running. `npm run prebuild` against the current file; commit the result.
-- If it still 404s, the source HTML has a new pattern the cleanup script doesn't strip. Inspect `public/図/皇室称号図/皇室称号図.html` for the offending tag and extend `scripts/clean-obsidian-export.mjs`.
+**The chart shows console errors about `wasm` or `site-lib`, or pan/zoom doesn't work.**
+- The chart's cleanup needs re-running. `npm run prebuild` against the current file; commit the result. The protocol-check rewrite is what keeps the inline-data branch alive — without it the chart tries to fetch files that aren't there and aborts before wiring up pan/zoom.
+- If the 404s persist, the source HTML has a new pattern the cleanup script doesn't strip. Inspect `public/図/皇室称号図/皇室称号図.html` for the offending tag or comparison and extend `scripts/clean-obsidian-export.mjs` (with a matching test fixture case).
+
+Pre-existing "Failed to find all required elements for canvas node" console noise is harmless and shows up locally too — that's the chart's own diagnostic about its layout pass, not an actual failure.
 
 **A markdown image renders as literal `![alt](...)` text.**
 - The path contains spaces and needs CommonMark angle-bracket form: `![alt](</path with spaces/file.png>)`. Edit the source.
