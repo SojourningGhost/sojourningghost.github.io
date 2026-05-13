@@ -20,7 +20,6 @@ A personal portfolio at <https://sojourningghost.github.io/>. The owner ("Sojour
 .nvmrc                         # pins Node 22 for nvm/fnm/Volta
 astro.config.mjs               # wires remark plugins + sitemap
 package.json
-plans/                         # design rationale + the executed plan
 public/                        # static pass-through
   改造/FFXI/conversion.lua     # mod download
   図/皇室称号図/                # the 3 MB Obsidian chart + its images
@@ -91,4 +90,4 @@ Because there's no test suite for layout/content correctness, "tests pass" doesn
 
 ## Where the design rationale lives
 
-`plans/2026-05-12-site-revamp-design.md` is the design doc; `plans/2026-05-12-site-revamp.md` is the executable plan that drove the migration from Jekyll. They document why the architecture is what it is.
+The design doc and executed migration plan are preserved on the `archive/jekyll-docs` branch at `docs/plans/2026-05-12-site-revamp-design.md` and `docs/plans/2026-05-12-site-revamp.md`. They document why the architecture is what it is. The files were removed from `main` when the pre-Astro `docs/` tree was dropped; the archive branch is the canonical reference.
