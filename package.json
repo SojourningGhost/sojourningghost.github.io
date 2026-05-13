@@ -7,14 +7,21 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "node scripts/clean-obsidian-export.mjs public/図/皇室称号図/皇室称号図.html",
+    "predev": "node scripts/clean-obsidian-export.mjs --scan public",
+    "prebuild": "node scripts/clean-obsidian-export.mjs --scan public",
     "build": "astro build",
     "preview": "astro preview",
+    "test": "node --test test/*.test.mjs",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/mdx": "5.0.4",
     "@astrojs/sitemap": "3.7.2",
     "astro": "6.3.1"
+  },
+  "devDependencies": {
+    "remark-parse": "11.0.0",
+    "remark-stringify": "11.0.0",
+    "unified": "11.0.5"
   }
 }
