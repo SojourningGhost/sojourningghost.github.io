@@ -1,60 +1,89 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working in this repository.
 
 ## What this repo is
 
-A personal portfolio site published at https://sojourningghost.github.io/. The owner ("SojourningGhost") is a translator and editor; the site holds Japanese↔English translations, essays on Japanese language, a Final Fantasy XI mod, English editing samples of game reviews, and one large interactive diagram of Japanese imperial titles.
+A personal portfolio at <https://sojourningghost.github.io/>. The owner ("SojourningGhost") is a translator and editor; the site holds Japanese↔English translations, essays on Japanese language, English editing samples of game reviews, a Final Fantasy XI mod, language notes, and one large interactive HTML chart of Japanese imperial titles.
 
 ## How the site is built and deployed
 
-- GitHub Pages, **source = `/docs` on `main`**. There is no CI; every push to `main` triggers a Pages build. The repo root is *not* the site root — anything outside `docs/` is invisible to the live site.
-- Jekyll with `jekyll-theme-minimal` (configured in `docs/_config.yml`). No `Gemfile`, no `.nojekyll`. Builds run with whatever versions GitHub Pages ships.
-- No `index.html`. The site index is `docs/readme.md`, which Jekyll renders to `/` because GitHub Pages treats README/readme as a fallback index. Edits to that file *are* edits to the landing page.
-- There is no local build, lint, or test tooling. To preview changes, push and check the live site, or run `bundle exec jekyll serve -s docs` after creating a Gemfile (not currently checked in).
+- **Astro** at the repo root (currently 6.x). Markdown content lives in `src/pages/**/*.md`; filenames map directly to URLs.
+- **GitHub Actions** builds and deploys on every push to `main` (`.github/workflows/deploy.yml`). The Pages "Source" setting must be "GitHub Actions", not a branch.
+- **No local build, lint, or test gates beyond what's checked into `package.json`.** `npm run dev` for preview; `npm run build` to compile; `npm run preview` to serve the compiled output.
+- **Node 22** is required (engines pin). Both the workflow and the engines field assume it.
 
 ## Repo layout
 
 ```
-README.md                    # repo-level overview (not part of the site)
-docs/                        # site source — everything below is published
-  _config.yml                # Jekyll config (theme/title/tagline/description)
-  readme.md                  # site landing page (rendered at /)
-  図/                        # "diagrams" — currently the imperial-titles HTML
-  拙訳/                       # translations (humble form: setsuyaku)
-  拙論/                       # essays on language (setsuron)
-  改造/                       # mods (kaizou) — currently one FFXI Lua mod
-  編輯/                       # editing samples (henshuu) — game reviews + style guide
-  覚書/                       # language notes/memoranda (oboegaki)
+.github/workflows/deploy.yml   # build + deploy to Pages
+astro.config.mjs               # wires remark plugins + sitemap
+package.json
+plans/                         # design rationale + the executed plan
+public/                        # static pass-through
+  改造/FFXI/conversion.lua     # mod download
+  図/皇室称号図/                # the 3 MB Obsidian chart + its images
+scripts/
+  clean-obsidian-export.mjs    # prebuild step that strips chart rot
+  remark-auto-layout.mjs       # assigns layouts by file path
+  remark-wikilink-strip.mjs    # turns [[wikilinks]] into plain text
+src/
+  components/                  # Header, Footer, PageList
+  layouts/                     # Default, Section, Home
+  pages/                       # all content lives here
+    index.md                   # → /
+    <section>/index.md         # → /<section>/
+    <section>/<page>.md        # → /<section>/<page>/
+  styles/global.css            # site-wide styles
+test/
+  *.test.mjs                   # node:test suites
+  fixtures/                    # test inputs
 ```
 
-Each content subfolder usually has a `readme.md` or `readme.txt` describing what's inside; the markdown ones are reachable as `/<folder>/readme.html` on the live site.
+## Layout assignment (the no-frontmatter authoring path)
 
-## Jekyll/Liquid gotchas in this repo
+`scripts/remark-auto-layout.mjs` runs in the markdown pipeline and assigns a layout based on where the file lives:
 
-These have caused real churn — recent commit history is mostly the owner wrestling with them.
+- `src/pages/index.md` → `Home.astro` (auto-lists top-level sections)
+- `src/pages/<section>/index.md` → `Section.astro` (auto-lists siblings)
+- everything else → `Default.astro`
 
-- **Linking from `docs/readme.md` to other pages.** Use Liquid `relative_url` so the path resolves correctly under the project's GitHub Pages base:
-  ```html
-  <a href="{{ '/図/皇室称号図/皇室称号図.html' | relative_url }}">皇室称号図</a>
-  ```
-  The leading slash and the `.html` extension both matter — the Obsidian-exported page is a raw HTML asset, not a Markdown-derived one, so Jekyll won't strip the extension.
+No `layout:` frontmatter is required — drop a `.md` in the right folder and it routes and styles correctly. Frontmatter `title:` is optional; the file's H1 or filename works as a fallback.
 
-- **Liquid in a raw HTML file requires YAML front-matter.** Jekyll only evaluates `{{ … }}` and `{% … %}` in files that begin with a `---` front-matter block (even an empty `---\n---\n` is enough; `layout: null` works too). Without front-matter, the file is copied verbatim and any Liquid ships as literal text.
+The auto-listing in `Section.astro` and `Home.astro` uses `import.meta.glob` and sorts with `localeCompare(..., 'ja')`. Folder names and titles in CJK sort correctly without extra configuration.
 
-  `docs/図/皇室称号図/皇室称号図.html` currently has `<base href="{{ '/' | relative_url }}">` but no front-matter (it was added in commit `a398555` "jekyll'd" and removed in `4b1c154` "dejekylling Ihope"). Because every image inside that page is embedded as a `data:` URI, the broken base tag is cosmetic — nothing fails to load — but a literal `{{ '/' | relative_url }}` string ends up in the deployed HTML's `<head>`. Re-adding `---\n---\n` at the top fixes it; alternatively replace the value with a hard-coded path or remove the `<base>` tag.
+## The imperial chart
 
-## The big HTML file
+`public/図/皇室称号図/皇室称号図.html` is a ~3 MB single-file Obsidian export. It is pass-through — Astro does not process it.
 
-`docs/図/皇室称号図/皇室称号図.html` is a ~3 MB single-file export from Obsidian Canvas (visualizes the Japanese imperial household titles). It contains the Obsidian runtime as inline minified JS plus all referenced images as base64 `data:` URIs.
+- **Do not `Read` the file whole** — it exceeds the tool's token budget. Use Grep on it or read by byte offset.
+- The `.canvas` JSON next to it is the editable source in Obsidian; the `.html` is a re-export.
+- A `prebuild` step (`scripts/clean-obsidian-export.mjs`) runs automatically before every build and re-runs idempotently. It strips a Liquid `<base>` tag left over from the Jekyll era, a `<link itemprop="include" href="site-lib/...">` that 404s on Pages, and a `.graph-view-wrapper` element whose mount triggers a wasm fetch. It then injects a fixed-position 「← 目次」 return link tagged with `data-sg-return-link` (used as the idempotency marker).
+- Re-exporting the chart from Obsidian: overwrite the `.html` and re-build. The cleanup runs automatically.
+- Pre-existing "Failed to find all required elements for canvas node" console noise in the chart is harmless and shows up locally too.
 
-- **Do not `Read` it whole** — it exceeds the tool's token limit. Use `head`/`tail`/`grep` to inspect specific sections, or read by byte offset.
-- The `.canvas` JSON next to it (`皇室称号図.canvas`) is the editable source in Obsidian; the `.html` is a re-export. Hand-edits to the HTML survive only until the next re-export.
-- The `画像/` subfolder holds the original SVG/JPG/PNG flag and reference images that are inlined into the HTML.
+## Wikilinks
 
-## Working with this repo
+Obsidian wikilink syntax — `[[Note]]`, `[[Note|alias]]`, `[[Note#anchor]]`, `![[image.jpg]]` — is handled by `scripts/remark-wikilink-strip.mjs`. All forms are reduced to plain text (the alias if present, otherwise the bare target). None of the wikilinks present in the migrated content actually point to pages or assets on this site, so resolving them as links would produce dead navigation.
 
-- **Filenames and folders are Japanese.** Most paths contain CJK characters. Shells and tools generally handle this, but expect URL-encoded forms (`%E5%9B%B3` for `図`, etc.) in logs and browser address bars.
-- **Commit style is terse.** The owner's commit messages are typically one to three words (`link`, `fixing html`, `dejekylling Ihope`). Match register when committing on this repo — short, lowercase, no ceremony.
-- **No co-author / Claude attribution lines on commits** (per the user's global guidance).
-- **Verifying a fix means looking at the live site.** Because there's no local build, "tests pass" doesn't apply. After pushing, wait for the Pages build and load the affected URL in a browser before declaring a fix done.
+To author proper site-internal navigation, write standard markdown links (`[text](/section/page/)`).
+
+## Image references in markdown
+
+Markdown image syntax with spaces in the URL must use CommonMark angle-bracket form: `![alt](</編輯/Foo Bar/Attachments/baz.png>)`. Without the angle brackets, the markdown parser truncates at the first space and emits the literal `![alt](...)` text. This affects all the game-review pages whose attachments live in folders with spaces.
+
+## Conventions
+
+- **Commit style is terse, lowercase, imperative.** Match the existing log: `migrate translations section`, `wire chart cleanup as prebuild`, etc. One to five words is typical for the subject.
+- **No co-author lines, no Claude attribution** on commits.
+- **All `npm install` / `npm add` use `--ignore-scripts` and `--save-exact`.** No semver ranges.
+- **Filenames and folders are Japanese.** Most paths contain CJK characters. Shells, Node, and Astro handle them fine; expect URL-encoded forms in build logs and browser address bars.
+- **For non-ASCII paths on Windows,** if `Write` fails with EEXIST or path-encoding errors (a known Claude Code regression), fall back to writing via Bash heredoc or Python.
+
+## Verifying a fix
+
+Because there's no test suite for layout/content correctness, "tests pass" doesn't mean "feature works." Run `npm run dev` and load the affected URL in a browser. After pushing to `main`, watch the Actions tab for the deploy run, then load the live URL.
+
+## Where the design rationale lives
+
+`plans/2026-05-12-site-revamp-design.md` is the design doc; `plans/2026-05-12-site-revamp.md` is the executable plan that drove the migration from Jekyll. They document why the architecture is what it is.
