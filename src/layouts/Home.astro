@@ -1,0 +1,31 @@
+---
+const { frontmatter } = Astro.props;
+const title = frontmatter?.title ?? 'SojourningGhost';
+
+const indexes = import.meta.glob('/src/pages/*/index.md', { eager: true });
+const sections = Object.entries(indexes)
+  .map(([path, mod]) => {
+    const dir = path.match(/^\/src\/pages\/([^/]+)\/index\.md$/)[1];
+    return {
+      href: '/' + dir + '/',
+      title: (mod && mod.frontmatter && mod.frontmatter.title) || dir,
+    };
+  })
+  .sort((a, b) => a.title.localeCompare(b.title, 'ja'));
+---
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <main>
+      <slot />
+      <ul>
+        {sections.map((s) => <li><a href={s.href}>{s.title}</a></li>)}
+      </ul>
+    </main>
+  </body>
+</html>
