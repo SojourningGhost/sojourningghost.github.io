@@ -8,7 +8,30 @@ const title = frontmatter?.title ?? 'SojourningGhost';
 const fullTitle = title === 'SojourningGhost' ? title : `${title} — SojourningGhost`;
 const description = frontmatter?.description
   ?? 'Translations, essays, mods, editing samples, and language notes by SojourningGhost.';
-const currentPath = Astro.url.pathname;
+// Decode because dev-server `Astro.url.pathname` arrives URL-encoded for
+// CJK paths (e.g. `/%E6%8B%99%E8%AB%96/foo/`), and our glob keys + nav
+// hrefs are all in the decoded form.
+const rawPath = Astro.url.pathname;
+let currentPath = rawPath;
+try { currentPath = decodeURI(rawPath); } catch { /* keep raw */ }
+
+// Detect sub-pages (e.g. /拙訳/foo/) so we can render the sticky return
+// bar and point the footer at the parent section instead of home.
+const segments = currentPath.split('/').filter(Boolean);
+const isSubPage = segments.length >= 2;
+
+let returnHref = '/';
+let returnLabel = '← 目次';
+if (isSubPage) {
+  const sectionDir = segments[0];
+  const indexes = import.meta.glob('/src/pages/*/index.md', { eager: true });
+  const indexMod = indexes[`/src/pages/${sectionDir}/index.md`] as
+    | { frontmatter?: { title?: string } }
+    | undefined;
+  const sectionTitle = indexMod?.frontmatter?.title || sectionDir;
+  returnHref = '/' + sectionDir + '/';
+  returnLabel = '← ' + sectionTitle;
+}
 ---
 <!doctype html>
 <html lang="ja">
@@ -23,9 +46,16 @@ const currentPath = Astro.url.pathname;
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <Header currentPath={currentPath} />
+    {isSubPage && (
+      <nav class="return-bar" aria-label="Section">
+        <div class="return-bar__inner">
+          <a class="return-bar__link" href={returnHref}>{returnLabel}</a>
+        </div>
+      </nav>
+    )}
     <main id="main" class="page">
       <slot />
     </main>
-    <Footer />
+    <Footer returnHref={returnHref} returnLabel={returnLabel} />
   </body>
 </html>

@@ -161,7 +161,7 @@ body {
 .site-nav a {
   color: var(--ink-muted);
   text-decoration: none;
-  border-bottom: 1px solid transparent;
+  border-bottom: 2px solid transparent;
   padding-bottom: 1px;
   transition: color 120ms ease, border-color 120ms ease;
 }
@@ -174,6 +174,39 @@ body {
 .site-nav a[aria-current="true"] {
   color: var(--ink);
   border-bottom-color: var(--ink);
+  font-weight: 500;
+}
+
+/* ---------- sticky return bar (sub-pages only) ----------
+   Sits below the site header and sticks to the top once the header
+   scrolls away, so the reader always has a one-click way back to the
+   parent section. Rendered by Default.astro when the URL is at least
+   two segments deep. */
+.return-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+  padding: var(--space-2) var(--space-4);
+}
+.return-bar__inner {
+  max-width: var(--measure-wide);
+  margin: 0 auto;
+}
+.return-bar__link {
+  font-family: var(--serif-ja);
+  font-size: var(--fs-sm);
+  color: var(--ink-muted);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 1px;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+.return-bar__link:hover,
+.return-bar__link:focus-visible {
+  color: var(--ink);
+  border-bottom-color: var(--ink-muted);
 }
 
 /* ---------- layout ---------- */
@@ -430,6 +463,7 @@ figcaption {
   .site-header { padding: var(--space-3); }
   .site-header__inner { gap: var(--space-2) var(--space-3); }
   .site-nav { margin-left: 0; gap: var(--space-2) var(--space-3); }
+  .return-bar { padding: var(--space-2) var(--space-3); }
   .page-list--sections .page-list__link { font-size: 1.1875rem; }
   /* Horizontal scroll for the bilingual table on narrow viewports. */
   table { display: block; overflow-x: auto; }
@@ -460,6 +494,7 @@ figcaption {
   body { font-size: 11pt; line-height: 1.5; }
   .site-header,
   .site-footer,
+  .return-bar,
   .skip-link { display: none; }
   .page { max-width: none; padding: 0; }
   a { color: var(--ink); text-decoration: underline; }

@@ -19,10 +19,16 @@ const sections = Object.entries(indexes)
   })
   .sort((a, b) => a.title.localeCompare(b.title, 'ja'));
 
+// Dev-server `Astro.url.pathname` arrives URL-encoded for CJK section
+// folders, so decode before comparing against the decoded hrefs we built
+// from glob keys — otherwise the active-tab indicator never lights up.
+let decodedPath = currentPath ?? '';
+try { decodedPath = decodeURI(decodedPath); } catch { /* keep as-is */ }
+
 function isCurrent(href: string): boolean {
-  if (!currentPath) return false;
-  if (href === '/') return currentPath === '/';
-  return currentPath === href || currentPath.startsWith(href);
+  if (!decodedPath) return false;
+  if (href === '/') return decodedPath === '/';
+  return decodedPath === href || decodedPath.startsWith(href);
 }
 ---
 <header class="site-header">

@@ -1,12 +1,22 @@
 ---
-// Site footer. `showReturn` controls whether the "← 目次" link is shown;
-// it's hidden on the home page itself.
-const { showReturn = true } = Astro.props as { showReturn?: boolean };
+// Site footer. `showReturn` controls whether the return link is shown;
+// it's hidden on the home page itself. `returnHref` / `returnLabel` let
+// the layout point the link at the parent section instead of always going
+// home — sub-pages set them so the footer matches the sticky return bar.
+const {
+  showReturn = true,
+  returnHref = '/',
+  returnLabel = '← 目次',
+} = Astro.props as {
+  showReturn?: boolean;
+  returnHref?: string;
+  returnLabel?: string;
+};
 ---
 <footer class="site-footer">
   <div class="site-footer__inner">
     {showReturn
-      ? <a href="/" rel="home">← 目次</a>
+      ? <a href={returnHref} rel={returnHref === '/' ? 'home' : undefined}>{returnLabel}</a>
       : <span class="site-footer__meta">Sojourning&nbsp;Ghost</span>}
     <span class="site-footer__meta">translation &middot; editing &middot; notes</span>
   </div>
