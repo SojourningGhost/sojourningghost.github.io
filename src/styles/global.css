@@ -344,7 +344,7 @@ pre code {
   border-radius: 0;
 }
 
-/* ---------- prose: tables (Close to you uses one) ---------- */
+/* ---------- prose: tables (bilingual lyric pages use these) ---------- */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -355,17 +355,21 @@ table {
 th, td {
   text-align: left;
   vertical-align: top;
-  padding: var(--space-2) var(--space-3);
-  border-bottom: 1px solid var(--rule);
+  padding: 0 var(--space-3);
   white-space: pre-wrap;
 }
 th {
   font-family: var(--serif-en);
   font-weight: 600;
+  padding-bottom: var(--space-2);
   border-bottom: 2px solid var(--ink);
   font-size: var(--fs-sm);
   letter-spacing: 0.02em;
 }
+/* First lyric row sits a touch below the header rule. */
+thead + tbody tr:first-child td { padding-top: var(--space-2); }
+/* Empty rows act as stanza breaks. */
+td:empty { padding-block: var(--space-2); }
 
 /* ---------- prose: images / media ---------- */
 img, svg, video {
