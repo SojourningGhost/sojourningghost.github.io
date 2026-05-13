@@ -1,15 +1,15 @@
 export function remarkH1Title() {
   return (tree, file) => {
     const fm = (file.data.astro ??= {}).frontmatter ??= {};
-    if (fm.title) return;
+    if ('title' in fm) return;
 
-    let found = false;
-    visit(tree, 'heading', (node) => {
-      if (found || node.depth !== 1) return;
-      found = true;
-      const text = extractText(node).trim();
-      if (text) fm.title = text;
-    });
+    for (const child of tree.children ?? []) {
+      if (child.type === 'heading' && child.depth === 1) {
+        const text = extractText(child).trim();
+        if (text) fm.title = text;
+        return;
+      }
+    }
   };
 }
 

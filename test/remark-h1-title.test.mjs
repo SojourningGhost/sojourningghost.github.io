@@ -49,6 +49,16 @@ test('only the first H1 wins when multiple H1s are present', () => {
   assert.equal(fm.title, 'Real Title');
 });
 
+test('top-level H1 wins over a blockquote-nested H1 that appears first', () => {
+  const fm = run('> # Inside quote\n\n# Real Title');
+  assert.equal(fm.title, 'Real Title');
+});
+
+test('empty-string title in frontmatter is not overwritten', () => {
+  const fm = run('# Some Heading', { title: '' });
+  assert.equal(fm.title, '');
+});
+
 test('follows same file.data.astro.frontmatter shape as remark-auto-layout', () => {
   // Verify the plugin initialises file.data.astro.frontmatter if missing
   const file = { data: {} };
