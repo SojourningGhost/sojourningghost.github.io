@@ -9,7 +9,7 @@ A personal portfolio at <https://sojourningghost.github.io/>. The owner ("Sojour
 ## How the site is built and deployed
 
 - **Astro** at the repo root (currently 6.x). Markdown content lives in `src/pages/**/*.md`; filenames map directly to URLs.
-- **GitHub Actions** builds and deploys on every push to `main` (`.github/workflows/deploy.yml`). The Pages "Source" setting must be "GitHub Actions", not a branch.
+- **GitHub Actions** builds and deploys on every push to `main` (`.github/workflows/deploy.yml`). The Pages "Source" setting must be "GitHub Actions", not a branch. CI runs `npm test` between `npm ci` and `npm run build`.
 - **No local build, lint, or test gates beyond what's checked into `package.json`.** `npm run dev` for preview; `npm run build` to compile; `npm run preview` to serve the compiled output.
 - **Node 22** is required (engines pin). Both the workflow and the engines field assume it.
 
@@ -17,6 +17,7 @@ A personal portfolio at <https://sojourningghost.github.io/>. The owner ("Sojour
 
 ```
 .github/workflows/deploy.yml   # build + deploy to Pages
+.nvmrc                         # pins Node 22 for nvm/fnm/Volta
 astro.config.mjs               # wires remark plugins + sitemap
 package.json
 plans/                         # design rationale + the executed plan
@@ -24,9 +25,12 @@ public/                        # static pass-through
   改造/FFXI/conversion.lua     # mod download
   図/皇室称号図/                # the 3 MB Obsidian chart + its images
 scripts/
-  clean-obsidian-export.mjs    # prebuild step that strips chart rot
+  clean-obsidian-export.mjs    # prebuild/predev step that strips chart rot
   remark-auto-layout.mjs       # assigns layouts by file path
+  remark-h1-title.mjs          # extracts H1 text into frontmatter.title
   remark-wikilink-strip.mjs    # turns [[wikilinks]] into plain text
+source/
+  図/皇室称号図/                # editable .canvas source + readme.txt (not served)
 src/
   components/                  # Header, Footer, PageList
   layouts/                     # Default, Section, Home
@@ -48,7 +52,7 @@ test/
 - `src/pages/<section>/index.md` → `Section.astro` (auto-lists siblings)
 - everything else → `Default.astro`
 
-No `layout:` frontmatter is required — drop a `.md` in the right folder and it routes and styles correctly. Frontmatter `title:` is optional; the file's H1 or filename works as a fallback.
+No `layout:` frontmatter is required — drop a `.md` in the right folder and it routes and styles correctly. Frontmatter `title:` is optional; the file's H1 or filename works as a fallback. The H1 fallback is implemented by `scripts/remark-h1-title.mjs`: it walks the AST, finds the first `heading` node at depth 1, and writes its plain text (emphasis and inline code stripped to their text content) into `frontmatter.title`. It runs before `remarkAutoLayout` in the plugin order.
 
 The auto-listing in `Section.astro` and `Home.astro` uses `import.meta.glob` and sorts with `localeCompare(..., 'ja')`. Folder names and titles in CJK sort correctly without extra configuration.
 
@@ -57,9 +61,10 @@ The auto-listing in `Section.astro` and `Home.astro` uses `import.meta.glob` and
 `public/図/皇室称号図/皇室称号図.html` is a ~3 MB single-file Obsidian export. It is pass-through — Astro does not process it.
 
 - **Do not `Read` the file whole** — it exceeds the tool's token budget. Use Grep on it or read by byte offset.
-- The `.canvas` JSON next to it is the editable source in Obsidian; the `.html` is a re-export.
-- A `prebuild` step (`scripts/clean-obsidian-export.mjs`) runs automatically before every build and re-runs idempotently. It strips a Liquid `<base>` tag left over from the Jekyll era, a `<link itemprop="include" href="site-lib/...">` that 404s on Pages, and a `.graph-view-wrapper` element whose mount triggers a wasm fetch. It rewrites every `"file:" === location.protocol` check (and the `!==` variant) in the inline JS so the chart always takes its self-contained inline-data branch — without that rewrite, http-served versions fetch `site-lib/metadata.json` + `graph-wasm.wasm` (neither ships with the export), and pan/zoom never wires up. Finally it injects a fixed-position 「← 目次」 return link tagged with `data-sg-return-link` (used as the idempotency marker).
-- Re-exporting the chart from Obsidian: overwrite the `.html` and re-build. The cleanup runs automatically.
+- The editable source (`.canvas` JSON + `readme.txt`) lives at `source/図/皇室称号図/` — tracked in git but not served publicly. The `画像/` images folder stays in `public/` because the chart HTML references them by relative URL.
+- A `predev`/`prebuild` step (`scripts/clean-obsidian-export.mjs --scan public`) runs automatically before every `npm run dev` and `npm run build`. It glob-scans `public/` for every `*.html` file and runs `clean()` on each, re-running idempotently. Per file it: strips a Liquid `<base>` tag left over from the Jekyll era; strips the `<link itemprop="include" href="site-lib/...">` that 404s on Pages; strips the `.graph-view-wrapper` element whose mount triggers a wasm fetch; rewrites every `"file:" === location.protocol` check (and the `!==` variant) in the inline JS so the chart always takes its self-contained inline-data branch — without that rewrite, http-served versions fetch `site-lib/metadata.json` + `graph-wasm.wasm` (neither ships with the export), and pan/zoom never wires up; and injects a fixed-position 「← 目次」 return link tagged with `data-sg-return-link` (idempotency marker). The return-link href is derived automatically from the file path: a chart at `public/<section>/.../*.html` links back to `/<section>/`.
+- Adding a new chart: export it anywhere under `public/`, link to it from the appropriate `src/pages/` index. No edits to `package.json` or any script needed — the glob-scan picks it up automatically.
+- Re-exporting the imperial chart: overwrite `public/図/皇室称号図/皇室称号図.html` and run `npm run dev` or `npm run build`. The cleanup runs automatically.
 - Pre-existing "Failed to find all required elements for canvas node" console noise in the chart is harmless and shows up locally too.
 
 ## Wikilinks
