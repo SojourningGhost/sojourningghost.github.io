@@ -15,28 +15,38 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 # --- edit these to change the placeholder --------------------------------
-TEXT = "SG"
-BG = (178, 58, 42, 255)         # 朱 vermilion seal red
-FG = (255, 255, 255, 255)       # carved-out white
-BORDER = (255, 255, 255, 60)    # faint inner stroke at larger sizes
+# Mirrors src/styles/global.css tokens:
+#   accent #6b3410   paper #f5f1e8   ink #1a1814
+TEXT = "旅"                      # journey / sojourn — ties to SojourningGhost
+BG = (0x6b, 0x34, 0x10, 255)     # --accent (warm brown)
+FG = (0xf5, 0xf1, 0xe8, 255)     # --paper (cream)
+BORDER = (0xf5, 0xf1, 0xe8, 70)  # faint cream inner stroke at larger sizes
 # -------------------------------------------------------------------------
 
 SIZES = [16, 24, 32, 48, 64, 128, 256]
 OUT = Path(__file__).resolve().parent.parent / "public" / "favicon.ico"
 
+# Prefer Japanese Mincho (matches --serif-ja); fall back to Yu Gothic Bold
+# and Chinese serifs so a kanji TEXT always renders with CJK glyphs.
 FONT_CANDIDATES = [
-    r"C:\Windows\Fonts\georgiab.ttf",
-    r"C:\Windows\Fonts\timesbd.ttf",
-    r"C:\Windows\Fonts\palab.ttf",
-    "/System/Library/Fonts/Supplemental/Georgia Bold.ttf",
-    "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf",
+    (r"C:\Windows\Fonts\yumin.ttf", 0),
+    (r"C:\Windows\Fonts\yuminb.ttf", 0),
+    (r"C:\Windows\Fonts\msmincho.ttc", 0),
+    (r"C:\Windows\Fonts\YuGothB.ttc", 0),
+    (r"C:\Windows\Fonts\simsun.ttc", 0),
+    (r"C:\Windows\Fonts\mingliub.ttc", 0),
+    ("/System/Library/Fonts/ヒラギノ明朝 ProN.ttc", 0),
+    ("/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc", 0),
 ]
 
 
 def load_font(px: int) -> ImageFont.ImageFont:
-    for path in FONT_CANDIDATES:
+    for path, index in FONT_CANDIDATES:
         if os.path.exists(path):
-            return ImageFont.truetype(path, px)
+            try:
+                return ImageFont.truetype(path, px, index=index)
+            except OSError:
+                continue
     return ImageFont.load_default()
 
 
@@ -61,10 +71,13 @@ def render(size: int) -> Image.Image:
             width=max(1, s // 96),
         )
 
-    # At tab sizes a two-letter monogram crowds; drop to the lead letter so
-    # each glyph gets enough pixels to read.
-    text = TEXT[0] if size <= 24 else TEXT
-    ratio = 0.70 if len(text) == 1 else 0.52
+    # Multi-glyph Latin monograms need a smaller ratio; a single CJK glyph
+    # fills its em-box and looks best around 0.66.
+    text = TEXT[0] if len(TEXT) > 1 and size <= 24 else TEXT
+    if len(text) == 1:
+        ratio = 0.78 if ord(text) < 0x2E80 else 0.66  # tighter for CJK
+    else:
+        ratio = 0.52
     font_px = int(s * ratio)
     font = load_font(font_px)
     bbox = d.textbbox((0, 0), text, font=font)
