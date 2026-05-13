@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
 
 const RETURN_LINK = `<a href="/" data-sg-return-link style="position:fixed;top:14px;left:14px;z-index:9999;padding:8px 14px;background:rgba(20,20,20,0.78);color:#f5f1ea;text-decoration:none;font:14px/1 system-ui,-apple-system,'Hiragino Mincho ProN','Yu Mincho',serif;border-radius:2px;backdrop-filter:blur(6px);">← 目次</a>`;
 
@@ -21,7 +22,7 @@ export function clean(html) {
   return out;
 }
 
-if (import.meta.url === `file://${process.argv[1].replace(/\\/g, '/')}`) {
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const target = process.argv[2];
   if (!target) {
     console.error('usage: clean-obsidian-export.mjs <html-file>');
