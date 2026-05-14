@@ -80,6 +80,7 @@ Markdown image syntax with spaces in the URL must use CommonMark angle-bracket f
 
 - **Commit style is terse, lowercase, imperative.** Match the existing log: `migrate translations section`, `wire chart cleanup as prebuild`, etc. One to five words is typical for the subject.
 - **No co-author lines, no Claude attribution** on commits.
+- **Work directly on `main` for this repo.** Don't create feature branches — commit straight to `main`. This overrides the global "feature branches only" default. (A global push-guard hook may still block pushing `main`; if it does, surface that to the user rather than silently branching around it.)
 - **All `npm install` / `npm add` use `--ignore-scripts` and `--save-exact`.** No semver ranges.
 - **Filenames and folders are Japanese.** Most paths contain CJK characters. Shells, Node, and Astro handle them fine; expect URL-encoded forms in build logs and browser address bars.
 - **For non-ASCII paths on Windows,** if `Write` fails with EEXIST or path-encoding errors (a known Claude Code regression), fall back to writing via Bash heredoc or Python.
