@@ -1,13 +1,15 @@
 ---
 title: SojourningGhost
 ---
-Welcome to this transitory storehouse of my knowledge. Contained herein are a selection of the fruits of my linguistic travels, categorized and arranged as can be seen above and below.
+Welcome to this transitory storehouse of my knowledge. Contained herein are a selection of the fruits of my linguistic travels, categorized and arranged according to the links seen above and below.
 
 ---
 
 ### About the Author
 
-My sojourn began with my native tongue, English, briefly flirted with the digital in school—amorous glances are still sometimes cast back this way—, and then entered what has proved to be its main part, Japanese. The imeptus for my turning East came in 2015 when I noticed a line in an anime episode that clearly consisted of a full sentence in the audio but whose subtitle contained only two words. "What are they really saying?" I wondered. "Is it truly so foreign that it cannot be rendered into English?"
+My sojourn began with my native tongue, English, briefly flirted with the digital in school—amorous glances are still sometimes cast back this way—, and then entered what has proved to be its main part, Japanese. 
+
+The imeptus for my turning East came in 2015 when I noticed a line in an anime episode that clearly consisted of a full sentence in the audio but whose subtitle contained only two words. "What are they really saying?" I wondered. "Is it truly so foreign that it cannot be rendered into English?"
 
 From that day, I set about learning the language with an eye toward mastery. I read grammar guides, filled notebook after notebook with handwritten sinographs, studied flash cards, practiced on Japanese friends and acquaintances, and consumed as much Japanese media as I reasonably could. All this went through many cycles of great diligence followed by relative looseness, but the one invariant is that I never stopped engaging with the language.
 
