@@ -2,9 +2,9 @@
 title: 編輯
 ---
 
-This folder contains samples of my editing.
+Herein are samples of my editing.
 
-The folders with game reviews each contain a file with the published version of the review and the editing process as well as a separate file containing raw BBcode of the review at various stages of completion. All three, but particularly the Ultimate Zombie Defense 2 and VLADiK Brutal reviews, required substantial editing. My job was to catch all grammatical and mechanical errors and to ensure the review met our standards for coverage. I did my best to leave everything else in the hands of the author; hence, slang, references, and the occasional bit of profanity went generally untouched, and the tone leans conversational.
+Each editing sample below consists of a file with the published version of the review and the editing process as well as a separate file containing raw BBcode of the review at various stages of its completion. All three, but particularly the Ultimate Zombie Defense 2 and VLADiK Brutal reviews, required substantial editing. My job was to catch all grammatical and mechanical errors and to ensure the review met our standards for coverage. I did my best to leave everything else in the hands of the author; hence, slang, references, and the occasional bit of profanity went generally untouched, and the tone leans conversational.
 
 The game reviews:
 
@@ -29,26 +29,26 @@ I am aware that my use of single quotes to distinguish quotations of sentence fr
 
 When quoting, enclose the quotation in double quotes. When quoting a full sentence, if the outer sentence coterminates with the quotation, no punctuation following the final quotation is necessary.
 
-> 〇 He asked, "Do I need to add punctuation after the quotation mark?"  
-> 〇 "Only if the sentence continues after the quotation ends," I said.
->
-> ✖ "Is this punctuation in error?".  
-> ✖ "I can't bear to look upon it!".
+〇 He asked, "Do I need to add punctuation after the quotation mark?"  
+〇 "Only if the sentence continues after the quotation ends," I said.
+
+✖ "Is this punctuation in error?".  
+✖ "I can't bear to look upon it!".
 
 Do not place punctuation inside quotation marks that belongs to the outer sentence. If the outer sentence ends with the quotation and there is no terminating punctuation mark in the quotation, the punctuation is placed after the final quotation mark.
 
-> 〇 I am sometimes called a 'pedant'.
->
-> ✖ I wish they would more often call me a 'traditionalist.'
+〇 I am sometimes called a 'pedant'.
+
+✖ I wish they would more often call me a 'traditionalist.'
 
 #### Titles
 
 Titles of games and other complete works are to be italicized. Punctuation following an italicized title is not to be italicized unless it is part of the title.
 
-> 〇 I have been enjoying *Monster Hunter Frontier*!
->
-> ✖ Have you played *Monster Hunter Frontier?*  
-> ✖ I wish more people would play "Monster Hunter Frontier" with me.
+〇 I have been enjoying *Monster Hunter Frontier*!
+
+✖ Have you played *Monster Hunter Frontier?*  
+✖ I wish more people would play "Monster Hunter Frontier" with me.
 
 ### Formatting
 
