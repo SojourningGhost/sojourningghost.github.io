@@ -2,12 +2,12 @@
 title: 拙訳
 ---
 
-This folder contains certain translations I have made. From Japanese to English, these include the only two Japanese records of ｜弥助《Yasuke》, a newspaper broadsheet from 1860, and two songs; from English to Japanese, a small fiction I was commissioned to translate.
+This folder contains certain translations I have made. From Japanese to English, these include the only two Japanese records of ｜弥助《Yasuke》, a newspaper broadsheet from 1860, and two songs; and, from English to Japanese, a small fiction I was commissioned to translate.
 
 I am comfortable with translating communicatively; that is, with an eye toward making the broad meaning of the text easily understandable to the target audience. Nevertheless, my preference and policy, in the absence of instructions to the contrary, is to translate semantically; that is, to remain faithful to the original text to the greatest degree possible: in word order, by maintaining it where feasible; in word choice, by not using a different word in English to represent the same word in Japanese except when it is used in a sense that demands it; in expression, by neither compressing nor simplifying into something more blandly palatable; in tone, by matching register; and so on.
 
 ---
 
-Regarding the song translations, I am aware that semantic translation does not always produce the most poetic result, but I desired that those who listened to the songs to be able to know, as much as can be across a language barrier, what was actually sung. One of my great frustrations with most song translations is the great liberties taken with the lyrics. It is all well and good to write new lyrics inspired by the themes original, but to call such a translation stretches the word past its breaking point.
+Regarding the song translations, I am aware that semantic translation does not always produce the most poetic result, but I desired that those who listened to the songs to be able to know, as much as can be across a language barrier, what was actually sung. One of my frustrations with most song translations is the great liberties taken with the lyrics. It is all well and good to write new lyrics inspired by the themes original, but to call such a translation stretches the word past its breaking point.
 
 Naturally, if I were asked to write lyrics based on an original song and not to translate it, I would take a different approach.
