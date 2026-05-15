@@ -17,7 +17,7 @@ from PIL import Image, ImageDraw, ImageFont
 # --- edit these to change the placeholder --------------------------------
 # Mirrors src/styles/global.css tokens:
 #   accent #6b3410   paper #f5f1e8   ink #1a1814
-TEXT = "旅"                      # journey / sojourn — ties to SojourningGhost
+TEXT = "遊"                      # play / wander — ties to SojourningGhost
 BG = (0x6b, 0x34, 0x10, 255)     # --accent (warm brown)
 FG = (0xf5, 0xf1, 0xe8, 255)     # --paper (cream)
 BORDER = (0xf5, 0xf1, 0xe8, 70)  # faint cream inner stroke at larger sizes
