@@ -73,6 +73,61 @@ Folder map:
 
 The section also appears automatically in the home page's section list and the header nav. No further wiring needed.
 
+## Renaming, moving, and deleting content
+
+URLs on this site are derived directly from file paths under `src/pages/`. Renaming, moving, or deleting a file changes (or removes) its URL. Astro's listing components (`Home.astro`, `Section.astro`, `Header.astro`) all use `import.meta.glob` over the live filesystem, so navigation, section lists, and the sitemap update on their own — but **internal links written into other pages don't**, and external inbound links to the old URL break with no redirect mechanism on Pages.
+
+The general workflow for any rename/move/delete:
+
+1. Use `git mv` (or `git rm`) so history follows the file.
+2. Search the repo for references to the old path and update them.
+3. `npm run dev` and click through the affected pages.
+4. Commit and push.
+
+### Renaming a page (changing its slug)
+
+```bash
+git mv src/pages/<section>/old-slug.md src/pages/<section>/new-slug.md
+```
+
+URL changes from `/<section>/old-slug/` to `/<section>/new-slug/`. The section landing's auto-listing picks up the new name immediately. Find any internal references with a search across `src/pages/` for `old-slug` and rewrite each. The `title:` frontmatter (if set) is independent of the slug — change it only if you want the displayed title to change too.
+
+### Renaming a section folder
+
+```bash
+git mv src/pages/<old-section> src/pages/<new-section>
+```
+
+Every URL under that section shifts. The header nav, home section list, and Section layout title all re-derive from the folder name (or its `index.md` `title:` frontmatter), so they update automatically. What you have to fix manually:
+
+- **Internal links.** Any markdown elsewhere on the site that links into the old section needs updating. Search for `/<old-section>/` across `src/pages/`.
+- **Parallel `public/<old-section>/` assets.** If the section serves static files from a matching `public/<old-section>/` folder (charts, downloads, images linked from markdown), rename that too in the same change: `git mv public/<old-section> public/<new-section>`. Then update every markdown link that referenced the old `/<old-section>/...` asset URL.
+- **Stale chart return links.** This is the one non-obvious gotcha. The chart cleanup script (`scripts/clean-obsidian-export.mjs`) injects the 「← 目次」 link with the section URL baked into the HTML, and uses the presence of `data-sg-return-link` as an idempotency marker — meaning it **will not overwrite** an already-injected link with a stale href. After renaming a section that contains charts, open each chart `.html` under the renamed folder, find the line tagged `data-sg-return-link`, and either delete it (the next `npm run dev` will inject a fresh one with the new path) or hand-edit the `href="..."` to the new section URL. The HTML files are large (multi-MB); a search-and-delete by the `data-sg-return-link` marker is faster than scrolling.
+
+### Moving a page between sections
+
+```bash
+git mv src/pages/<old-section>/page.md src/pages/<new-section>/page.md
+```
+
+URL changes from `/<old-section>/page/` to `/<new-section>/page/`. Both section landings update their listings automatically. Same internal-link search as a rename.
+
+### Deleting a page or a whole section
+
+```bash
+git rm src/pages/<section>/page.md            # one page
+git rm -r src/pages/<section>/                # whole section
+```
+
+The page or section disappears from URL space, header nav, and listings on the next build. Search for inbound internal references and remove or redirect them; otherwise readers get a 404 mid-navigation. If `public/<section>/` exists in parallel and is no longer referenced, `git rm -r public/<section>/` it too.
+
+### About inbound link rot
+
+GitHub Pages has no server-side redirect mechanism, so renaming or deleting a published URL breaks anyone linking to the old one from outside. There's no clean fix; the practical mitigations are:
+
+- **Don't rename casually.** If a URL is established, prefer keeping the slug stable and changing only the displayed `title:` in frontmatter.
+- **For high-value URLs**, leave a stub at the old path: a tiny `public/<old-path>/index.html` containing a `<meta http-equiv="refresh" content="0; url=/<new-path>/">` and a one-line `<a href="...">` fallback. It's manual and ugly but it's the only redirect the platform supports.
+
 ## Re-exporting the chart from Obsidian
 
 The imperial-titles chart at `public/図/皇室称号図/皇室称号図.html` is a single-file export from Obsidian Canvas. The editable source (`.canvas` + `readme.txt`) lives at `source/図/皇室称号図/` — tracked in git but not served publicly. To update the chart:
@@ -107,6 +162,8 @@ If the cleanup script ever doesn't catch a new pattern, edit `scripts/clean-obsi
 5. Commit and push.
 
 No editing of `package.json` or any script is needed — the cleanup glob-scans `public/` for `*.html` files automatically.
+
+If you ever need to rename the `図` section folder (or any section that contains charts), see the **Renaming a section folder** subsection above — there's a stale-return-link gotcha specific to charts.
 
 ## Local preview
 
