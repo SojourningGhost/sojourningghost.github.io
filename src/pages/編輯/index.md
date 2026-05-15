@@ -4,7 +4,9 @@ title: 編輯
 
 Herein are samples of my editing.
 
-Each editing sample below consists of a file with the published version of the review and the editing process as well as a separate file containing raw BBcode of the review at various stages of its completion. All three, but particularly the Ultimate Zombie Defense 2 and VLADiK Brutal reviews, required substantial editing. My job was to catch all grammatical and mechanical errors and to ensure the review met our standards for coverage. I did my best to leave everything else in the hands of the author; hence, slang, references, and the occasional bit of profanity went generally untouched, and the tone leans conversational.
+The below samples are from various video game reviews I edited. Each consists of a page with the published version of the review and the editing process as well as a separate page showing the raw BBcode of the review at various stages of its completion.
+
+All three, but particularly the Ultimate Zombie Defense 2 and VLADiK Brutal reviews, required substantial editing. My job was to catch all grammatical and mechanical errors and to ensure the review met our standards for coverage. I did my best to leave everything else in the hands of the author; hence, slang, references, and the occasional bit of profanity went generally untouched, and the tone leans conversational.
 
 The game reviews:
 
@@ -17,7 +19,7 @@ The game reviews:
 
 ## Review Style Guide
 
-The below is a brief style guide I wrote for game reviews published on a message board of which I am a moderator. It was mainly meant to address formatting questions specific to our custom version of phpBB, but I also included guidelines concerning a couple of the most common errors I had seen in editing. It was agreed between the editors that any unaddressed topic would be referred to *The Chicago Manual of Style*.
+The below is a very brief style guide I wrote for game reviews published on a gaming message board. It was mainly meant to address formatting questions specific to our custom version of phpBB, but I also included guidelines concerning a couple of the most common errors I had seen in editing. It was agreed between the editors that any unaddressed topic would be referred to *The Chicago Manual of Style*.
 
 I am aware that my use of single quotes to distinguish quotations of sentence fragments from those of whole sentences is idiosyncratic, but it is a distinction I would like to see become standard.
 
