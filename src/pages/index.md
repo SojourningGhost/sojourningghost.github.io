@@ -9,7 +9,7 @@ Contained herein are a selection of the fruits of my linguistic travels, categor
 
 ### About the Author
 
-My sojourn began with my native tongue, English, briefly flirted with the digital in school—amorous glances are still sometimes cast back this way—, and then entered what has proved to be its main part, Japanese. 
+My sojourn began with my native tongue, English, briefly flirted with the digital in school—amorous glances are still sometimes cast back this way—, and then entered what has proved thus far to be its main part, Japanese. 
 
 The imeptus for my turning East came in 2015 when I noticed a line in an anime episode that clearly consisted of a full sentence in the audio but whose subtitle contained only two words. "What are they really saying?" I wondered. "Is it truly so foreign that it cannot be rendered into English?"
 
